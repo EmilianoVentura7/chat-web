@@ -10,14 +10,12 @@ function randomColorGenerator() {
     return color;
 }
 
-
-
 function imprimirMensajes(mensajes) {
     console.log('Mensajes recibidos:', mensajes);
     for (const mensaje of mensajes) {
         const li = document.createElement("li");
         const userColor = randomColorGenerator(); 
-        li.innerHTML = `<span style="color: ${userColor}; font-weight: bold;">${mensaje.user}:</span> <span style="font-weight: bold;">${mensaje.asunto}</span></span> <span style="text-align: right; color: gray">${mensaje.fecha}</span>`;
+        li.innerHTML = `<span style="color: ${userColor}; font-weight: bold;">${mensaje.user}:</span> <span style="font-weight: bold;">${mensaje.asunto}</span> <span style="text-align: right; color: gray">${mensaje.fecha}</span>`;
         mensajesUL.appendChild(li);
     }
 }
@@ -30,12 +28,12 @@ function getMensajes() {
             const mensajes = data.mensajes;
             imprimirMensajes(mensajes);
             ultimoMensaje = mensajes.length > 0 ? mensajes[mensajes.length - 1].id : 0;
-            getNewMensajes(3000);
+            getNewMensajes();
         })
         .catch(console.log);
 }
 
-function getNewMensajes(interval) {
+function getNewMensajes() {
     fetch('http://localhost:3000/mensajes/update?idMensaje=' + ultimoMensaje)
         .then(resp => resp.json())
         .then(data => {
@@ -45,15 +43,14 @@ function getNewMensajes(interval) {
             if (mensajes.length > 0) {
                 ultimoMensaje = mensajes[mensajes.length - 1].id;
             }
-            setTimeout(() => getNewMensajes(interval), interval);
+            setTimeout(getNewMensajes, 5000);
         })
         .catch(console.log);
-        
 }
 
 function postearMensajes() {
-    const usuario = document.getElementById("usuario").value
-    const mensaje = document.getElementById("mensaje").value
+    const usuario = document.getElementById("usuario").value;
+    const mensaje = document.getElementById("mensaje").value;
     const postData = {
         user: usuario,
         asunto: mensaje
@@ -71,3 +68,5 @@ function postearMensajes() {
         })
         .catch(error => console.error('Error:', error));
 }
+
+getMensajes();
