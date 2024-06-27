@@ -198,6 +198,12 @@ wss.on('connection', (ws: WebSocket) => {
     });
 });
 
+app.post('/', (req, res) => {
+    const payload = req.body;
+    console.log('Webhook recibido:', payload);
+    res.status(200).send('Webhook recibido y procesado');
+});
+
 const ws = createWebSocketConnection();
 
 server.listen(4000, () => {
